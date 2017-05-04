@@ -1,3 +1,13 @@
+/** Project: 1
+ *  Task 2
+ *  Description: (30%) Implement condition variables directly, by using
+ *  interrupt enable and disable to provide atomicity. We have provided
+ *  a sample implementation that uses semaphores; your job is to provide
+ *  an equivalent implementation without directly using semaphores. Once 
+ *  you are done, you will have two alternative implementations that provide
+ *  the exact same functionality. Your second implementation of condition 
+ *  variables must reside in class nachos.threads.Condition2.
+ */ 
 package nachos.threads;
 
 import nachos.machine.*;
@@ -22,6 +32,7 @@ public class Condition2 {
     */
    public Condition2(Lock conditionLock) {
       this.conditionLock = conditionLock;
+      // list of threads waiting in line (mimacing semiphore)
       this.threadWaitQueue = new LinkedList<KThread>();
 
 
@@ -35,7 +46,7 @@ public class Condition2 {
     */
    public void sleep() {
       Lib.assertTrue(conditionLock.isHeldByCurrentThread());
-
+      // add thread to back of queue, then put to sleep
       this.threadWaitQueue.addLast(KThread.currentThread());
 
       conditionLock.release();
@@ -52,6 +63,7 @@ public class Condition2 {
     */
    public void wake() {
       Lib.assertTrue(conditionLock.isHeldByCurrentThread());
+      // retrieve the next thread in line
       boolean interruptStatus = Machine.interrupt().disable();
       if(!this.threadWaitQueue.isEmpty())
       {
@@ -66,7 +78,9 @@ public class Condition2 {
     */
    public void wakeAll() {
       Lib.assertTrue(conditionLock.isHeldByCurrentThread());
+
       boolean interruptStatus = Machine.interrupt().disable();
+      // go through and retrieve all threads in waitline
       while (!this.threadWaitQueue.isEmpty())
       {
          wake();
@@ -74,7 +88,11 @@ public class Condition2 {
       Machine.interrupt().restore(interruptStatus);   
    }
 
-
+   /**
+    *  Creates a test for Task 2 Project one, testing our implementation
+    *  of condition variables and interupts without the use of semiphores
+    *  (compared to Condition.java)
+    */
    public static void selfTest()
    {
       System.out.println("Testing Condition2");

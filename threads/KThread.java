@@ -1,3 +1,15 @@
+/** Project: 1
+ *  Task 1
+ *  Description: (20%) Implement KThread.join(). Note that another thread 
+ *  does not have to call join(), but if it is called, it must be called 
+ *  only once. The result of calling join() a second time on the same thread 
+ *  is undefined, even if the second caller is a different thread than the 
+ *  first caller. Said another way: there is no requirement to support multiple
+ *  join calls on the same thread. For example, say threads a, b, & c exist and
+ *  all have references to each other. If a calls b.join() then you don't need
+ *  to support the case where c also calls b.join(). A thread must finish
+ *  executing normally whether or not it is joined.
+ */ 
 package nachos.threads;
 
 import nachos.machine.*;
